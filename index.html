@@ -2,7 +2,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Galeria Gótica</title>
+    <title>Goth gallery</title>
     <style>
       :root {
         --bg: #0f0f12;
@@ -132,14 +132,17 @@
     </div>
 
     <footer>
-      <small>Observação: Imagens meramente reais e ilustrativas</small>
+      <small
+        >Примечание: изображения приведены только в иллюстративных целях и
+        предназначены только для реальных целей.</small
+      >
     </footer>
 
     <script>
       const images = Array.from({ length: 30 }, (_, i) => ({
         src: `imagens/gotica${i + 1}.jpg`,
-        title: `Gótica ${i + 1}`,
-        credit: "pinterest",
+        title: `готика ${i + 1}`,
+        credit: "pinterest?",
       }));
 
       const gallery = document.getElementById("gallery");
