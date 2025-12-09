@@ -117,11 +117,8 @@
   </head>
   <body>
     <header>
-      <h1>Galeria — Mulheres Góticas</h1>
-      <p>
-        Galeria responsiva com lightbox. Substitua as imagens por outras com
-        licença adequada.
-      </p>
+      <h1>Galeria — Gotich</h1>
+      <p>Galeria responsiva com lightbox.</p>
     </header>
 
     <main class="container">
@@ -136,17 +133,14 @@
     </div>
 
     <footer>
-      <small
-        >Observação: use apenas imagens que você tenha direito de usar
-        (Unsplash, Pexels, imagens próprias, etc.).</small
-      >
+      <small>Observação: Imagens meramente reais e ilustrativas</small>
     </footer>
 
     <script>
       const images = Array.from({ length: 30 }, (_, i) => ({
         src: `imagens/gotica${i + 1}.jpg`,
         title: `Gótica ${i + 1}`,
-        credit: "Minha imagem",
+        credit: "pinterest",
       }));
 
       const gallery = document.getElementById("gallery");
