@@ -118,7 +118,10 @@
   <body>
     <header>
       <h1>Galeria — Mulheres Góticas</h1>
-      <p>Galeria responsiva com lightbox.</p>
+      <p>
+        Galeria responsiva com lightbox. Substitua as imagens por outras com
+        licença adequada.
+      </p>
     </header>
 
     <main class="container">
@@ -140,108 +143,62 @@
     </footer>
 
     <script>
-      // Fontes de exemplo: esses endpoints do Unsplash retornam imagens "góticas" aleatórias.
-      // Troque pelos URLs das imagens que você tiver permissão para usar.
-      const images = [
-        {
-          src: "imagens/gotica1.jpg",
-          title: "Gótica 1",
-          credit: "Minha imagem",
-        },
-        {
-          src: "imagens/gotica2.jpg",
-          title: "Gótica 2",
-          credit: "Minha imagem",
-        },
-        {
-          src: "imagens/gotica3.jpg",
-          title: "Gótica 3",
-          credit: "Minha imagem",
-        },
-        {
-          src: "imagens/gotica4.jpg",
-          title: "Gótica 4",
-          credit: "Minha imagem",
-        },
-        {
-          src: "imagens/gotica5.jpg",
-          title: "Gótica 5",
-          credit: "Minha imagem",
-        },
-        {
-          src: "imagens/gotica6.jpg",
-          title: "Gótica 6",
-          credit: "Minha imagem",
-        },
-        {
-          src: "imagens/gotica7.jpg",
-          title: "Gótica 7",
-          credit: "Minha imagem",
-        },
-        {
-          src: "imagens/gotica8.jpg",
-          title: "Gótica 8",
-          credit: "Minha imagem",
-        },
-        {
-          src: "imagens/gotica9.jpg",
-          title: "Gótica 9",
-          credit: "Minha imagem",
-        },
-        {
-          src: "imagens/gotica10.jpg",
-          title: "Gótica 10",
-          credit: "Minha imagem",
-        },
-        {
-          src: "imagens/gotica11.jpg",
-          title: "Gótica 11",
-          credit: "Minha imagem",
-        },
-        {
-          src: "imagens/gotica12.jpg",
-          title: "Gótica 12",
-          credit: "Minha imagem",
-        },
-      ];
+      const images = Array.from({ length: 30 }, (_, i) => ({
+        src: `imagens/gotica${i + 1}.jpg`,
+        title: `Gótica ${i + 1}`,
+        credit: "Minha imagem",
+      }));
 
       const gallery = document.getElementById("gallery");
       const lightbox = document.getElementById("lightbox");
       const lightboxImg = document.getElementById("lightboxImg");
       const closeBtn = document.getElementById("closeBtn");
+      let currentIndex = 0;
 
       images.forEach((it, idx) => {
         const card = document.createElement("article");
         card.className = "card";
         card.innerHTML = `
-        <img loading="lazy" src="${it.src}" alt="${it.title}" data-idx="${idx}" />
+        <img loading="lazy" src="${it.src}" alt="${it.title}" />
         <div class="meta">
           <h3>${it.title}</h3>
           <p>${it.credit}</p>
         </div>`;
-        card.addEventListener("click", () => openLightbox(it.src, it.title));
+        card.addEventListener("click", () => openLightbox(idx));
         gallery.appendChild(card);
       });
 
-      function openLightbox(src, alt) {
-        lightboxImg.src = src;
-        lightboxImg.alt = alt;
+      function openLightbox(index) {
+        currentIndex = index;
+        lightboxImg.src = images[index].src;
+        lightboxImg.alt = images[index].title;
         lightbox.classList.add("open");
-        lightbox.setAttribute("aria-hidden", "false");
       }
+
       function closeLightbox() {
         lightbox.classList.remove("open");
-        lightbox.setAttribute("aria-hidden", "true");
         lightboxImg.src = "";
       }
+
+      function nextImg() {
+        currentIndex = (currentIndex + 1) % images.length;
+        openLightbox(currentIndex);
+      }
+
+      function prevImg() {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        openLightbox(currentIndex);
+      }
+
       closeBtn.addEventListener("click", closeLightbox);
       lightbox.addEventListener("click", (e) => {
         if (e.target === lightbox) closeLightbox();
       });
 
-      // Fecha com Esc
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowRight") nextImg();
+        if (e.key === "ArrowLeft") prevImg();
       });
     </script>
   </body>
