@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Galeria Gótica</title>
+    <style>
+      :root {
+        --bg: #0f0f12;
+        --card: #111217;
+        --muted: #9aa0a6;
+        --accent: #8b5cf6;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, Arial, sans-serif;
+        background: linear-gradient(180deg, var(--bg), #071017);
+        color: #eee;
+      }
+      header {
+        padding: 28px 20px;
+        text-align: center;
+      }
+      header h1 {
+        margin: 0.1rem;
+        font-size: clamp(20px, 4vw, 34px);
+        letter-spacing: 1px;
+      }
+      header p {
+        margin: 6px 0 0;
+        color: var(--muted);
+      }
+      .container {
+        max-width: 1100px;
+        margin: 28px auto;
+        padding: 0 18px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 18px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6);
+        cursor: pointer;
+        transition: transform 0.18s;
+      }
+      .card:hover {
+        transform: translateY(-6px);
+      }
+      .card img {
+        display: block;
+        width: 100%;
+        height: 320px;
+        object-fit: cover;
+      }
+      .meta {
+        padding: 12px;
+      }
+      .meta h3 {
+        margin: 0;
+        font-size: 15px;
+      }
+      .meta p {
+        margin: 6px 0 0;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      /* Lightbox */
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.85);
+        z-index: 60;
+      }
+      .lightbox.open {
+        display: flex;
+      }
+      .lightbox img {
+        max-width: 92%;
+        max-height: 86%;
+        border-radius: 8px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+      }
+      .close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: transparent;
+        border: 0;
+        color: #fff;
+        font-size: 28px;
+        cursor: pointer;
+      }
+
+      footer {
+        color: var(--muted);
+        text-align: center;
+        padding: 26px 18px;
+      }
+      @media (max-width: 420px) {
+        .card img {
+          height: 240px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Galeria — Mulheres Góticas</h1>
+      <p>Galeria responsiva com lightbox.</p>
+    </header>
+
+    <main class="container">
+      <div class="grid" id="gallery">
+        <!-- Imagens carregadas pelo JS -->
+      </div>
+    </main>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-hidden="true">
+      <button class="close" id="closeBtn" aria-label="Fechar">✕</button>
+      <img id="lightboxImg" src="" alt="Imagem ampliada" />
+    </div>
+
+    <footer>
+      <small
+        >Observação: use apenas imagens que você tenha direito de usar
+        (Unsplash, Pexels, imagens próprias, etc.).</small
+      >
+    </footer>
+
+    <script>
+      // Fontes de exemplo: esses endpoints do Unsplash retornam imagens "góticas" aleatórias.
+      // Troque pelos URLs das imagens que você tiver permissão para usar.
+      const images = [
+        {
+          src: "imagens/gotica1.jpg",
+          title: "Gótica 1",
+          credit: "Minha imagem",
+        },
+        {
+          src: "imagens/gotica2.jpg",
+          title: "Gótica 2",
+          credit: "Minha imagem",
+        },
+        {
+          src: "imagens/gotica3.jpg",
+          title: "Gótica 3",
+          credit: "Minha imagem",
+        },
+        {
+          src: "imagens/gotica4.jpg",
+          title: "Gótica 4",
+          credit: "Minha imagem",
+        },
+        {
+          src: "imagens/gotica5.jpg",
+          title: "Gótica 5",
+          credit: "Minha imagem",
+        },
+        {
+          src: "imagens/gotica6.jpg",
+          title: "Gótica 6",
+          credit: "Minha imagem",
+        },
+        {
+          src: "imagens/gotica7.jpg",
+          title: "Gótica 7",
+          credit: "Minha imagem",
+        },
+        {
+          src: "imagens/gotica8.jpg",
+          title: "Gótica 8",
+          credit: "Minha imagem",
+        },
+        {
+          src: "imagens/gotica9.jpg",
+          title: "Gótica 9",
+          credit: "Minha imagem",
+        },
+        {
+          src: "imagens/gotica10.jpg",
+          title: "Gótica 10",
+          credit: "Minha imagem",
+        },
+        {
+          src: "imagens/gotica11.jpg",
+          title: "Gótica 11",
+          credit: "Minha imagem",
+        },
+        {
+          src: "imagens/gotica12.jpg",
+          title: "Gótica 12",
+          credit: "Minha imagem",
+        },
+      ];
+
+      const gallery = document.getElementById("gallery");
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightboxImg");
+      const closeBtn = document.getElementById("closeBtn");
+
+      images.forEach((it, idx) => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+        <img loading="lazy" src="${it.src}" alt="${it.title}" data-idx="${idx}" />
+        <div class="meta">
+          <h3>${it.title}</h3>
+          <p>${it.credit}</p>
+        </div>`;
+        card.addEventListener("click", () => openLightbox(it.src, it.title));
+        gallery.appendChild(card);
+      });
+
+      function openLightbox(src, alt) {
+        lightboxImg.src = src;
+        lightboxImg.alt = alt;
+        lightbox.classList.add("open");
+        lightbox.setAttribute("aria-hidden", "false");
+      }
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        lightbox.setAttribute("aria-hidden", "true");
+        lightboxImg.src = "";
+      }
+      closeBtn.addEventListener("click", closeLightbox);
+      lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      // Fecha com Esc
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeLightbox();
+      });
+    </script>
+  </body>
+</html>
