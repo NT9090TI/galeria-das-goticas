@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login - Galeria Gótica</title>
+    <style>
+      body {
+        background: #000;
+        color: #fff;
+        font-family: Arial;
+        text-align: center;
+        padding: 60px;
+      }
+      input {
+        width: 250px;
+        padding: 10px;
+        margin: 8px;
+        background: #111;
+        border: 2px solid #8a2be2;
+        color: white;
+      }
+      button {
+        padding: 12px 20px;
+        background: #8a2be2;
+        border: none;
+        color: white;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Login</h1>
+
+    <input id="loginUser" placeholder="Usuário" /><br />
+    <input id="loginPass" type="password" placeholder="Senha" /><br />
+
+    <button onclick="login()">Entrar</button>
+    <p>Ainda não tem conta? <a href="cadastro.html">Cadastre-se</a></p>
+
+    <script>
+      function login() {
+        let user = loginUser.value;
+        let pass = loginPass.value;
+
+        let savedUser = localStorage.getItem("user");
+        let savedPass = localStorage.getItem("pass");
+
+        if (user === savedUser && pass === savedPass) {
+          window.location = "pagina1.html";
+        } else {
+          alert("Usuário ou senha inválidos!");
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Página 3 — Upload & Galeria (Goth)</title>
+    <style>
+      :root {
+        --bg: #050407;
+        --card: #0f0f14;
+        --muted: #9aa0a6;
+        --accent: #8b5cf6;
+        --neon: #b300ff;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, Arial, sans-serif;
+        background: linear-gradient(180deg, var(--bg), #07060a);
+        color: #eee;
+        min-height: 100vh;
+      }
+      header {
+        text-align: center;
+        padding: 26px 16px;
+      }
+      header h1 {
+        margin: 0;
+        font-size: clamp(20px, 4vw, 34px);
+        text-shadow: 0 0 12px var(--neon);
+      }
+      .nav {
+        margin-top: 12px;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .nav a {
+        text-decoration: none;
+        background: var(--accent);
+        color: #fff;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-weight: 600;
+        box-shadow: 0 0 12px var(--neon);
+      }
+
+      .wrap {
+        max-width: 1100px;
+        margin: 20px auto;
+        padding: 0 18px 80px;
+      }
+
+      .upload-card {
+        background: var(--card);
+        border-radius: 12px;
+        padding: 18px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .upload-left {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .file-label {
+        padding: 8px 12px;
+        background: #111218;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      input[type="file"] {
+        display: none;
+      }
+      .upload-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .btn {
+        background: var(--accent);
+        color: #fff;
+        border: 0;
+        padding: 10px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 700;
+        box-shadow: 0 0 10px var(--neon);
+      }
+
+      .gallery {
+        margin-top: 22px;
+        display: grid;
+        gap: 18px;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+      .card {
+        background: linear-gradient(180deg, #0b0b0f, #0e0e13);
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+      }
+      .card img {
+        width: 100%;
+        height: 260px;
+        object-fit: cover;
+        display: block;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      .card img:hover {
+        transform: scale(1.02);
+      }
+      .card .card-actions {
+        display: flex;
+        gap: 8px;
+        padding: 10px;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .small-btn {
+        background: rgba(0, 0, 0, 0.45);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 8px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .fav-on {
+        color: var(--neon);
+        box-shadow: 0 0 8px var(--neon);
+      }
+      .delete-btn {
+        background: #6b001a;
+        color: #fff;
+      }
+
+      .empty {
+        text-align: center;
+        color: var(--muted);
+        margin-top: 40px;
+      }
+
+      /* LIGHTBOX */
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.88);
+        z-index: 200;
+        flex-direction: column;
+        padding: 20px;
+      }
+      .lightbox.open {
+        display: flex;
+      }
+      .lightbox .img-wrap {
+        position: relative;
+        max-width: 92%;
+        max-height: 80vh;
+      }
+      .lightbox img {
+        max-width: 100%;
+        max-height: 80vh;
+        border-radius: 10px;
+        box-shadow: 0 0 36px rgba(0, 0, 0, 0.8);
+        transition: filter 0.2s, transform 0.2s;
+      }
+      .lightbox .controls {
+        margin-top: 14px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .close-light {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        background: transparent;
+        border: 0;
+        color: #fff;
+        font-size: 28px;
+        cursor: pointer;
+      }
+      .comment-box {
+        margin-top: 12px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .comment-box input {
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 0;
+        min-width: 220px;
+        background: #111217;
+        color: #fff;
+      }
+
+      @media (max-width: 520px) {
+        .card img {
+          height: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Página 3 — Upload Gótico</h1>
+      <div class="nav">
+        <a href="index.html">Página 1</a>
+        <a href="pagina2.html">Página 2</a>
+        <a href="pagina3.html">Página 3</a>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <div class="upload-card" role="region" aria-label="Upload de imagens">
+        <div class="upload-left">
+          <label class="file-label" for="fileInput">Escolher imagem</label>
+          <input id="fileInput" type="file" accept="image/*" />
+          <div style="color: var(--muted); font-size: 14px">
+            Aceitamos JPG/PNG/GIF — máximo recomendado: 8MB
+          </div>
+        </div>
+
+        <div class="upload-actions">
+          <button class="btn" id="addBtn">Adicionar à galeria</button>
+          <button
+            class="btn"
+            id="clearUploads"
+            title="Apagar todas env. locais"
+          >
+            Limpar env.
+          </button>
+        </div>
+      </div>
+
+      <div id="gallery" class="gallery" aria-live="polite"></div>
+      <p id="emptyMsg" class="empty">Nenhuma imagem enviada ainda.</p>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div id="lightbox" class="lightbox" aria-hidden="true">
+      <div class="img-wrap">
+        <button class="close-light" title="Fechar" onclick="closeLightbox()">
+          ✕
+        </button>
+        <img id="lightboxImg" src="" alt="Imagem ampliada" />
+      </div>
+
+      <div class="controls" role="toolbar" aria-label="Controles de imagem">
+        <button class="small-btn" onclick="setFilter('none')">Normal</button>
+        <button class="small-btn" onclick="setFilter('grayscale(100%)')">
+          P&B
+        </button>
+        <button class="small-btn" onclick="setFilter('sepia(1)')">Sépia</button>
+        <button class="small-btn" onclick="setFilter('contrast(1.6)')">
+          Contraste
+        </button>
+        <button class="small-btn" onclick="setFilter('blur(3px)')">Blur</button>
+        <button class="small-btn" onclick="setFilter('saturate(1.8)')">
+          Saturar
+        </button>
+        <button
+          class="small-btn"
+          onclick="setFilter('brightness(1.25) drop-shadow(0 0 18px var(--neon))')"
+        >
+          Neon
+        </button>
+        <button class="small-btn" id="downloadBtn">Download</button>
+      </div>
+
+      <div class="comment-box">
+        <input id="commentInput" placeholder="Escrever comentário..." />
+        <button class="small-btn" id="saveComment">Salvar</button>
+      </div>
+
+      <div
+        id="commentsList"
+        style="
+          margin-top: 12px;
+          color: var(--muted);
+          max-width: 90%;
+          text-align: left;
+        "
+      ></div>
+    </div>
+
+    <script>
+      // Keys usados no localStorage
+      const KEY_UPLOADS = "userUploads";
+      const KEY_FAVORITOS = "favoritos"; // compatível com páginas 1/2
+      const KEY_COMMENTS = "imageComments"; // objeto { src: [comentarios...] }
+
+      // DOM
+      const fileInput = document.getElementById("fileInput");
+      const addBtn = document.getElementById("addBtn");
+      const gallery = document.getElementById("gallery");
+      const emptyMsg = document.getElementById("emptyMsg");
+      const clearUploads = document.getElementById("clearUploads");
+
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightboxImg");
+      const downloadBtn = document.getElementById("downloadBtn");
+      const commentInput = document.getElementById("commentInput");
+      const saveComment = document.getElementById("saveComment");
+      const commentsList = document.getElementById("commentsList");
+
+      // Estado
+      let userImages = JSON.parse(localStorage.getItem(KEY_UPLOADS) || "[]");
+      let favoritos = JSON.parse(localStorage.getItem(KEY_FAVORITOS) || "[]");
+      let comments = JSON.parse(localStorage.getItem(KEY_COMMENTS) || "{}");
+      let currentSrc = null;
+
+      // Render
+      function renderGallery() {
+        gallery.innerHTML = "";
+        if (userImages.length === 0) {
+          emptyMsg.style.display = "block";
+          return;
+        }
+        emptyMsg.style.display = "none";
+
+        userImages.forEach((src, idx) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+          <img src="${src}" alt="Envio ${
+            idx + 1
+          }" onclick="openLight('${src}')">
+          <div class="card-actions">
+            <div style="display:flex;gap:8px">
+              <button class="small-btn fav-btn ${
+                favoritos.includes(src) ? "fav-on" : ""
+              }" onclick="toggleFav(event,'${src}')">
+                ${favoritos.includes(src) ? "★ Favorito" : "☆ Favoritar"}
+              </button>
+              <button class="small-btn" onclick="openLight('${src}')">Abrir</button>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="small-btn" onclick="downloadImage('${src}')">Baixar</button>
+              <button class="small-btn delete-btn" onclick="deleteImage(${idx})">Excluir</button>
+            </div>
+          </div>
+        `;
+          gallery.appendChild(card);
+        });
+      }
+
+      // Upload / adicionar
+      addBtn.addEventListener("click", () => {
+        const f = fileInput.files[0];
+        if (!f) return alert("Selecione uma imagem antes.");
+        if (f.size > 8 * 1024 * 1024) {
+          if (!confirm("Arquivo grande (>8MB). Deseja continuar?")) return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          userImages.unshift(e.target.result); // adiciona no início
+          localStorage.setItem(KEY_UPLOADS, JSON.stringify(userImages));
+          renderGallery();
+          fileInput.value = "";
+        };
+        reader.readAsDataURL(f);
+      });
+
+      // Limpar todos uploads locais
+      clearUploads.addEventListener("click", () => {
+        if (!confirm("Apagar todas as imagens enviadas localmente?")) return;
+        userImages = [];
+        localStorage.removeItem(KEY_UPLOADS);
+        renderGallery();
+      });
+
+      // Delete
+      function deleteImage(index) {
+        if (!confirm("Excluir esta imagem?")) return;
+        // também remove da lista de favoritos caso exista
+        const src = userImages[index];
+        favoritos = favoritos.filter((s) => s !== src);
+        localStorage.setItem(KEY_FAVORITOS, JSON.stringify(favoritos));
+        userImages.splice(index, 1);
+        localStorage.setItem(KEY_UPLOADS, JSON.stringify(userImages));
+        renderGallery();
+      }
+
+      // Favoritos
+      function toggleFav(e, src) {
+        e.stopPropagation();
+        if (favoritos.includes(src)) {
+          favoritos = favoritos.filter((s) => s !== src);
+        } else {
+          favoritos.push(src);
+        }
+        localStorage.setItem(KEY_FAVORITOS, JSON.stringify(favoritos));
+        // atualizar botões visuais
+        renderGallery();
+      }
+
+      // Lightbox
+      function openLight(src) {
+        currentSrc = src;
+        lightboxImg.src = src;
+        lightbox.classList.add("open");
+        lightbox.setAttribute("aria-hidden", "false");
+        commentInput.value = "";
+        renderCommentsForSrc(src);
+      }
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        lightbox.setAttribute("aria-hidden", "true");
+        lightboxImg.style.filter = "none";
+        commentsList.innerHTML = "";
+      }
+
+      // filtros
+      function setFilter(filter) {
+        lightboxImg.style.filter = filter;
+      }
+
+      // download (cria link temporário)
+      function downloadImage(dataUrl) {
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = "goth_image.png";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
+
+      // comentários (por src)
+      function renderCommentsForSrc(src) {
+        commentsList.innerHTML = "";
+        const list = comments[src] || [];
+        if (list.length === 0) {
+          commentsList.innerHTML =
+            '<div style="opacity:.8">Sem comentários ainda.</div>';
+          return;
+        }
+        const ul = document.createElement("ul");
+        ul.style.paddingLeft = "16px";
+        list.forEach((c) => {
+          const li = document.createElement("li");
+          li.style.marginBottom = "6px";
+          li.textContent = c;
+          ul.appendChild(li);
+        });
+        commentsList.appendChild(ul);
+      }
+
+      saveComment.addEventListener("click", () => {
+        const text = commentInput.value.trim();
+        if (!text) return alert("Escreva algo no comentário.");
+        comments[currentSrc] = comments[currentSrc] || [];
+        comments[currentSrc].push(text);
+        localStorage.setItem(KEY_COMMENTS, JSON.stringify(comments));
+        commentInput.value = "";
+        renderCommentsForSrc(currentSrc);
+      });
+
+      // botão de fechar clicando fora
+      lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      // tecla ESC fecha
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeLightbox();
+      });
+
+      // inicializa
+      renderGallery();
+    </script>
+  </body>
+</html>

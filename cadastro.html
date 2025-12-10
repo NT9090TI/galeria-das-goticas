@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cadastro - Galeria Gótica</title>
+    <style>
+      body {
+        background: #000;
+        color: #fff;
+        font-family: Arial;
+        text-align: center;
+        padding: 60px;
+      }
+      input {
+        width: 250px;
+        padding: 10px;
+        margin: 8px;
+        background: #111;
+        border: 2px solid #8a2be2;
+        color: white;
+      }
+      button {
+        padding: 12px 20px;
+        background: #8a2be2;
+        border: none;
+        color: white;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Criar Conta</h1>
+
+    <input id="user" placeholder="Usuário" /><br />
+    <input id="pass" type="password" placeholder="Senha" /><br />
+
+    <button onclick="cadastrar()">Cadastrar</button>
+
+    <p>Já possui conta? <a href="login.html">Login</a></p>
+
+    <script>
+      function cadastrar() {
+        localStorage.setItem("user", user.value);
+        localStorage.setItem("pass", pass.value);
+        localStorage.setItem("profileName", user.value);
+        localStorage.setItem("profilePic", "");
+
+        alert("Cadastro feito!");
+        window.location = "login.html";
+      }
+    </script>
+  </body>
+</html>

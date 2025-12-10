@@ -1,201 +1,303 @@
+<!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Goth gallery</title>
+    <title>Goth Gallery — Página 1</title>
     <style>
       :root {
-        --bg: #0f0f12;
-        --card: #111217;
-        --muted: #9aa0a6;
-        --accent: #8b5cf6;
+        --bg: #08070d;
+        --card: #0f0e14;
+        --accent: #a855f7;
+        --neon: #b26dff;
+        --muted: #9a9a9a;
       }
       * {
         box-sizing: border-box;
       }
       body {
         margin: 0;
-        font-family: Inter, system-ui, Arial, sans-serif;
-        background: linear-gradient(180deg, var(--bg), #071017);
-        color: #eee;
+        font-family: Inter, system-ui, Arial;
+        background: radial-gradient(circle at top, #0d0b12, #050409 80%);
+        color: #fff;
+        min-height: 100vh;
       }
+
       header {
-        padding: 28px 20px;
+        padding: 24px;
         text-align: center;
       }
-      header h1 {
-        margin: 0.1rem;
-        font-size: clamp(20px, 4vw, 34px);
-        letter-spacing: 1px;
+      h1 {
+        margin: 0;
+        font-size: 30px;
+        text-shadow: 0 0 10px var(--accent);
       }
-      header p {
-        margin: 6px 0 0;
-        color: var(--muted);
+      nav {
+        margin-top: 12px;
       }
+      nav a {
+        margin: 0 8px;
+        padding: 10px 14px;
+        background: var(--accent);
+        color: #000;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 700;
+        box-shadow: 0 0 12px var(--accent);
+      }
+
       .container {
         max-width: 1100px;
-        margin: 28px auto;
+        margin: 22px auto;
         padding: 0 18px;
       }
       .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 18px;
       }
+
       .card {
         background: var(--card);
         border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6);
-        cursor: pointer;
+        position: relative;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
         transition: transform 0.18s;
       }
       .card:hover {
         transform: translateY(-6px);
       }
-      .card img {
-        display: block;
+      .thumb {
         width: 100%;
         height: 320px;
         object-fit: cover;
-      }
-      .meta {
-        padding: 12px;
-      }
-      .meta h3 {
-        margin: 0;
-        font-size: 15px;
-      }
-      .meta p {
-        margin: 6px 0 0;
-        font-size: 13px;
-        color: var(--muted);
+        display: block;
       }
 
-      /* Lightbox */
+      /* heart */
+      .fav-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.45);
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+        border: 0;
+        transition: transform 0.18s, box-shadow 0.18s;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        user-select: none;
+      }
+      .fav-btn.activated {
+        color: #ff2f8d;
+        box-shadow: 0 6px 28px rgba(255, 47, 141, 0.18), 0 0 16px #ff2f8d;
+        transform: scale(1.12);
+      }
+      .fav-btn.pulse {
+        animation: favPulse 0.42s ease;
+      }
+      @keyframes favPulse {
+        0% {
+          transform: scale(0.9);
+        }
+        60% {
+          transform: scale(1.25);
+        }
+        100% {
+          transform: scale(1.12);
+        }
+      }
+
+      /* lightbox */
       .lightbox {
         position: fixed;
         inset: 0;
         display: none;
         align-items: center;
         justify-content: center;
-        background: rgba(0, 0, 0, 0.85);
-        z-index: 60;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 120;
       }
       .lightbox.open {
         display: flex;
       }
       .lightbox img {
         max-width: 92%;
-        max-height: 86%;
-        border-radius: 8px;
+        max-height: 84%;
+        border-radius: 10px;
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
       }
-      .close {
+      .close-btn {
         position: absolute;
-        top: 20px;
+        top: 18px;
         right: 20px;
+        font-size: 28px;
+        color: #fff;
         background: transparent;
         border: 0;
-        color: #fff;
-        font-size: 28px;
         cursor: pointer;
       }
-
-      footer {
-        color: var(--muted);
-        text-align: center;
-        padding: 26px 18px;
+      .arrow {
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 44px;
+        color: #fff;
+        cursor: pointer;
+        padding: 6px 10px;
+        user-select: none;
+        text-shadow: 0 0 10px var(--neon);
       }
-      @media (max-width: 420px) {
-        .card img {
-          height: 240px;
+      .arrow.left {
+        left: 22px;
+      }
+      .arrow.right {
+        right: 22px;
+      }
+
+      @media (max-width: 520px) {
+        .thumb {
+          height: 220px;
+        }
+        .arrow {
+          font-size: 34px;
         }
       }
     </style>
   </head>
   <body>
     <header>
-      <h1>Gallery — Goth Girls</h1>
-      <p>Galeria responsiva com lightbox.</p>
+      <h1>Goth Gallery — Página 1</h1>
+      <nav>
+        <a href="pagina2.html">Favoritos</a>
+        <a href="pagina3.html">Enviar Foto</a>
+        <a href="perfil.html">Perfil</a>
+      </nav>
     </header>
 
     <main class="container">
-      <div class="grid" id="gallery">
-        <!-- Imagens carregadas pelo JS -->
-      </div>
+      <div class="grid" id="gallery"></div>
     </main>
 
-    <div class="lightbox" id="lightbox" role="dialog" aria-hidden="true">
-      <button class="close" id="closeBtn" aria-label="Fechar">✕</button>
-      <img id="lightboxImg" src="" alt="Imagem ampliada" />
+    <!-- lightbox -->
+    <div id="lightbox" class="lightbox" aria-hidden="true">
+      <button class="close-btn" id="closeLight">✕</button>
+      <span class="arrow left" id="prevBtn">⟵</span>
+      <img id="lightImg" src="" alt="Ampliada" />
+      <span class="arrow right" id="nextBtn">⟶</span>
     </div>
 
-    <footer>
-      <small
-        >Примечание: изображения приведены только в иллюстративных целях и
-        предназначены только для реальных целей.</small
-      >
-    </footer>
-
     <script>
+      /* ---------- imagens (44) ---------- */
       const images = Array.from({ length: 44 }, (_, i) => ({
         src: `imagens/gotica${i + 1}.jpg`,
-        title: `готика ${i + 1}`,
-        credit: "pinterest?",
+        title: `Gótica ${i + 1}`,
       }));
 
+      /* elementos */
       const gallery = document.getElementById("gallery");
       const lightbox = document.getElementById("lightbox");
-      const lightboxImg = document.getElementById("lightboxImg");
-      const closeBtn = document.getElementById("closeBtn");
+      const lightImg = document.getElementById("lightImg");
+      const closeLight = document.getElementById("closeLight");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+
+      /* estado */
       let currentIndex = 0;
+      let favoritos = JSON.parse(localStorage.getItem("favoritos") || "[]");
 
-      images.forEach((it, idx) => {
-        const card = document.createElement("article");
-        card.className = "card";
-        card.innerHTML = `
-        <img loading="lazy" src="${it.src}" alt="${it.title}" />
-        <div class="meta">
-          <h3>${it.title}</h3>
-          <p>${it.credit}</p>
-        </div>`;
-        card.addEventListener("click", () => openLightbox(idx));
-        gallery.appendChild(card);
-      });
+      /* monta galeria */
+      function renderGallery() {
+        gallery.innerHTML = "";
+        images.forEach((it, idx) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          const isFav = favoritos.includes(it.src);
 
-      function openLightbox(index) {
-        currentIndex = index;
-        lightboxImg.src = images[index].src;
-        lightboxImg.alt = images[index].title;
-        lightbox.classList.add("open");
+          card.innerHTML = `
+      <button class="fav-btn ${isFav ? "activated" : ""}" data-src="${
+            it.src
+          }" aria-label="Favoritar" title="Favoritar">❤</button>
+      <img class="thumb" src="${it.src}" alt="${it.title}" data-idx="${idx}">
+    `;
+          gallery.appendChild(card);
+        });
+
+        // delegação: clique em coração ou imagem
+        gallery.querySelectorAll(".fav-btn").forEach((btn) => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            const src = btn.dataset.src;
+            toggleFav(src, btn);
+          };
+        });
+        gallery.querySelectorAll(".thumb").forEach((img) => {
+          img.onclick = () => openLightbox(parseInt(img.dataset.idx, 10));
+        });
       }
 
+      /* favoritar */
+      function toggleFav(src, btn) {
+        const was = favoritos.includes(src);
+        if (was) {
+          favoritos = favoritos.filter((s) => s !== src);
+          btn.classList.remove("activated");
+        } else {
+          favoritos.push(src);
+          btn.classList.add("activated");
+          btn.classList.add("pulse");
+          setTimeout(() => btn.classList.remove("pulse"), 420);
+        }
+        localStorage.setItem("favoritos", JSON.stringify(favoritos));
+      }
+
+      /* lightbox */
+      function openLightbox(idx) {
+        currentIndex = idx;
+        lightImg.src = images[idx].src;
+        lightbox.classList.add("open");
+        lightbox.setAttribute("aria-hidden", "false");
+      }
       function closeLightbox() {
         lightbox.classList.remove("open");
-        lightboxImg.src = "";
+        lightbox.setAttribute("aria-hidden", "true");
       }
-
       function nextImg() {
         currentIndex = (currentIndex + 1) % images.length;
-        openLightbox(currentIndex);
+        lightImg.src = images[currentIndex].src;
       }
-
       function prevImg() {
         currentIndex = (currentIndex - 1 + images.length) % images.length;
-        openLightbox(currentIndex);
+        lightImg.src = images[currentIndex].src;
       }
 
-      closeBtn.addEventListener("click", closeLightbox);
+      /* eventos */
+      closeLight.onclick = closeLightbox;
+      nextBtn.onclick = nextImg;
+      prevBtn.onclick = prevImg;
+
+      /* click fora fecha */
       lightbox.addEventListener("click", (e) => {
         if (e.target === lightbox) closeLightbox();
       });
 
+      /* teclado */
       document.addEventListener("keydown", (e) => {
+        if (!lightbox.classList.contains("open")) return;
         if (e.key === "Escape") closeLightbox();
         if (e.key === "ArrowRight") nextImg();
         if (e.key === "ArrowLeft") prevImg();
       });
+
+      /* inicial */
+      renderGallery();
     </script>
   </body>
 </html>
