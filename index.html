@@ -172,13 +172,13 @@
       }
     </style>
   </head>
+
   <body>
     <header>
       <h1>Goth Gallery — Página 1</h1>
       <nav>
         <a href="pagina2.html">Favoritos</a>
         <a href="pagina3.html">Enviar Foto</a>
-        <a href="perfil.html">Perfil</a>
       </nav>
     </header>
 
@@ -195,13 +195,12 @@
     </div>
 
     <script>
-      /* ---------- imagens (44) ---------- */
+      /* imagens */
       const images = Array.from({ length: 44 }, (_, i) => ({
         src: `imagens/gotica${i + 1}.jpg`,
         title: `Gótica ${i + 1}`,
       }));
 
-      /* elementos */
       const gallery = document.getElementById("gallery");
       const lightbox = document.getElementById("lightbox");
       const lightImg = document.getElementById("lightImg");
@@ -209,11 +208,9 @@
       const prevBtn = document.getElementById("prevBtn");
       const nextBtn = document.getElementById("nextBtn");
 
-      /* estado */
       let currentIndex = 0;
       let favoritos = JSON.parse(localStorage.getItem("favoritos") || "[]");
 
-      /* monta galeria */
       function renderGallery() {
         gallery.innerHTML = "";
         images.forEach((it, idx) => {
@@ -222,32 +219,32 @@
           const isFav = favoritos.includes(it.src);
 
           card.innerHTML = `
-      <button class="fav-btn ${isFav ? "activated" : ""}" data-src="${
+            <button class="fav-btn ${isFav ? "activated" : ""}" data-src="${
             it.src
-          }" aria-label="Favoritar" title="Favoritar">❤</button>
-      <img class="thumb" src="${it.src}" alt="${it.title}" data-idx="${idx}">
-    `;
+          }">❤</button>
+            <img class="thumb" src="${it.src}" alt="${
+            it.title
+          }" data-idx="${idx}">
+          `;
+
           gallery.appendChild(card);
         });
 
-        // delegação: clique em coração ou imagem
         gallery.querySelectorAll(".fav-btn").forEach((btn) => {
           btn.onclick = (e) => {
             e.stopPropagation();
-            const src = btn.dataset.src;
-            toggleFav(src, btn);
+            toggleFav(btn.dataset.src, btn);
           };
         });
+
         gallery.querySelectorAll(".thumb").forEach((img) => {
-          img.onclick = () => openLightbox(parseInt(img.dataset.idx, 10));
+          img.onclick = () => openLightbox(Number(img.dataset.idx));
         });
       }
 
-      /* favoritar */
       function toggleFav(src, btn) {
-        const was = favoritos.includes(src);
-        if (was) {
-          favoritos = favoritos.filter((s) => s !== src);
+        if (favoritos.includes(src)) {
+          favoritos = favoritos.filter((f) => f !== src);
           btn.classList.remove("activated");
         } else {
           favoritos.push(src);
@@ -258,16 +255,13 @@
         localStorage.setItem("favoritos", JSON.stringify(favoritos));
       }
 
-      /* lightbox */
       function openLightbox(idx) {
         currentIndex = idx;
-        lightImg.src = images[idx].src;
+        lightImg.src = images[currentIndex].src;
         lightbox.classList.add("open");
-        lightbox.setAttribute("aria-hidden", "false");
       }
       function closeLightbox() {
         lightbox.classList.remove("open");
-        lightbox.setAttribute("aria-hidden", "true");
       }
       function nextImg() {
         currentIndex = (currentIndex + 1) % images.length;
@@ -278,25 +272,21 @@
         lightImg.src = images[currentIndex].src;
       }
 
-      /* eventos */
       closeLight.onclick = closeLightbox;
       nextBtn.onclick = nextImg;
       prevBtn.onclick = prevImg;
 
-      /* click fora fecha */
-      lightbox.addEventListener("click", (e) => {
+      lightbox.onclick = (e) => {
         if (e.target === lightbox) closeLightbox();
-      });
+      };
 
-      /* teclado */
-      document.addEventListener("keydown", (e) => {
+      document.onkeydown = (e) => {
         if (!lightbox.classList.contains("open")) return;
         if (e.key === "Escape") closeLightbox();
         if (e.key === "ArrowRight") nextImg();
         if (e.key === "ArrowLeft") prevImg();
-      });
+      };
 
-      /* inicial */
       renderGallery();
     </script>
   </body>
