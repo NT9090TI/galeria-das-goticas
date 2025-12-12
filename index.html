@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Goth Gallery — Página 1</title>
+    <title>Goth Gallery — Page 1</title>
     <style>
       :root {
         --bg: #08070d;
@@ -170,12 +170,37 @@
           font-size: 34px;
         }
       }
+
+      /* 🔥 BOTÃO SECRETO VERMELHO */
+      .botao-secreto {
+        position: fixed;
+        bottom: 22px;
+        right: 22px;
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        background: #ff0033;
+        color: #fff;
+        font-size: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        box-shadow: 0 0 16px #ff0033, 0 0 26px #ff0033;
+        z-index: 9999;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .botao-secreto:hover {
+        transform: scale(1.18);
+        box-shadow: 0 0 20px #ff0033, 0 0 34px #ff0033;
+      }
     </style>
   </head>
 
   <body>
     <header>
-      <h1>Goth Gallery — Página 1</h1>
+      <h1>Goth Gallery — Page 1</h1>
       <nav>
         <a href="pagina2.html">Favoritos</a>
         <a href="pagina3.html">Enviar Foto</a>
@@ -195,7 +220,6 @@
     </div>
 
     <script>
-      /* imagens */
       const images = Array.from({ length: 44 }, (_, i) => ({
         src: `imagens/gotica${i + 1}.jpg`,
         title: `Gótica ${i + 1}`,
@@ -260,6 +284,7 @@
         lightImg.src = images[currentIndex].src;
         lightbox.classList.add("open");
       }
+
       function closeLightbox() {
         lightbox.classList.remove("open");
       }
@@ -289,5 +314,8 @@
 
       renderGallery();
     </script>
+
+    <!-- 🔥 BOTÃO SECRETO -->
+    <a href="pagina_secreta.html" class="botao-secreto">🔥</a>
   </body>
 </html>
