@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
@@ -149,7 +148,7 @@
         margin-top: 40px;
       }
 
-      /* LIGHTBOX */
+     
       .lightbox {
         position: fixed;
         inset: 0;
@@ -251,7 +250,7 @@
       <p id="emptyMsg" class="empty">Nenhuma imagem enviada ainda.</p>
     </div>
 
-    <!-- LIGHTBOX -->
+    
     <div id="lightbox" class="lightbox" aria-hidden="true">
       <div class="img-wrap">
         <button class="close-light" title="Fechar" onclick="closeLightbox()">
@@ -299,12 +298,12 @@
     </div>
 
     <script>
-      // Keys usados no localStorage
+     
       const KEY_UPLOADS = "userUploads";
-      const KEY_FAVORITOS = "favoritos"; // compatível com páginas 1/2
-      const KEY_COMMENTS = "imageComments"; // objeto { src: [comentarios...] }
+      const KEY_FAVORITOS = "favoritos";
+      const KEY_COMMENTS = "imageComments"; 
 
-      // DOM
+      
       const fileInput = document.getElementById("fileInput");
       const addBtn = document.getElementById("addBtn");
       const gallery = document.getElementById("gallery");
@@ -318,13 +317,13 @@
       const saveComment = document.getElementById("saveComment");
       const commentsList = document.getElementById("commentsList");
 
-      // Estado
+     
       let userImages = JSON.parse(localStorage.getItem(KEY_UPLOADS) || "[]");
       let favoritos = JSON.parse(localStorage.getItem(KEY_FAVORITOS) || "[]");
       let comments = JSON.parse(localStorage.getItem(KEY_COMMENTS) || "{}");
       let currentSrc = null;
 
-      // Render
+   
       function renderGallery() {
         gallery.innerHTML = "";
         if (userImages.length === 0) {
@@ -359,7 +358,7 @@
         });
       }
 
-      // Upload / adicionar
+      
       addBtn.addEventListener("click", () => {
         const f = fileInput.files[0];
         if (!f) return alert("Selecione uma imagem antes.");
@@ -368,7 +367,7 @@
         }
         const reader = new FileReader();
         reader.onload = (e) => {
-          userImages.unshift(e.target.result); // adiciona no início
+          userImages.unshift(e.target.result); 
           localStorage.setItem(KEY_UPLOADS, JSON.stringify(userImages));
           renderGallery();
           fileInput.value = "";
@@ -376,7 +375,7 @@
         reader.readAsDataURL(f);
       });
 
-      // Limpar todos uploads locais
+      
       clearUploads.addEventListener("click", () => {
         if (!confirm("Apagar todas as imagens enviadas localmente?")) return;
         userImages = [];
@@ -384,10 +383,10 @@
         renderGallery();
       });
 
-      // Delete
+      
       function deleteImage(index) {
         if (!confirm("Excluir esta imagem?")) return;
-        // também remove da lista de favoritos caso exista
+        
         const src = userImages[index];
         favoritos = favoritos.filter((s) => s !== src);
         localStorage.setItem(KEY_FAVORITOS, JSON.stringify(favoritos));
@@ -396,7 +395,7 @@
         renderGallery();
       }
 
-      // Favoritos
+    
       function toggleFav(e, src) {
         e.stopPropagation();
         if (favoritos.includes(src)) {
@@ -405,11 +404,11 @@
           favoritos.push(src);
         }
         localStorage.setItem(KEY_FAVORITOS, JSON.stringify(favoritos));
-        // atualizar botões visuais
+       
         renderGallery();
       }
 
-      // Lightbox
+      
       function openLight(src) {
         currentSrc = src;
         lightboxImg.src = src;
@@ -425,12 +424,12 @@
         commentsList.innerHTML = "";
       }
 
-      // filtros
+      
       function setFilter(filter) {
         lightboxImg.style.filter = filter;
       }
 
-      // download (cria link temporário)
+     
       function downloadImage(dataUrl) {
         const a = document.createElement("a");
         a.href = dataUrl;
@@ -440,7 +439,7 @@
         a.remove();
       }
 
-      // comentários (por src)
+      
       function renderCommentsForSrc(src) {
         commentsList.innerHTML = "";
         const list = comments[src] || [];
@@ -470,17 +469,17 @@
         renderCommentsForSrc(currentSrc);
       });
 
-      // botão de fechar clicando fora
+      
       lightbox.addEventListener("click", (e) => {
         if (e.target === lightbox) closeLightbox();
       });
 
-      // tecla ESC fecha
+      
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeLightbox();
       });
 
-      // inicializa
+      
       renderGallery();
     </script>
   </body>
